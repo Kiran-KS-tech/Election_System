@@ -2,6 +2,21 @@
 
 A complete, secure, and modern Django-based voting terminal designed for school student council elections. It is optimized to run on a shared, supervised voting booth device.
 
+## 🌐 Live Deployment
+
+> **The system is live and accessible at:**
+>
+> | Page | URL |
+> |---|---|
+> | 🗳️ **Student Voting** | https://school-election-app.onrender.com/vote/ |
+> | 🎛️ **Invigilator Control Panel** | https://school-election-app.onrender.com/control/ |
+> | 📊 **Election Results** | https://school-election-app.onrender.com/results/ |
+> | 👤 **Admin Login** | https://school-election-app.onrender.com/login/ |
+>
+> **Admin credentials:** Username: `admin` · Password: `admin123`
+
+---
+
 ## Key Features
 
 * **Dual Leader Elections:** Elects one Male School Leader and one Female School Leader.
