@@ -1,0 +1,258 @@
+{% extends 'election/base.html' %}
+{% load static %}
+
+{% block title %}Election Results | School Election 2026{% endblock %}
+
+
+{% block content %}
+<div id="printable-results-area">
+    
+    <!-- Printable Document Header (visible only during print) -->
+    <div class="d-none d-print-block text-center border-bottom pb-4 mb-4">
+        <img src="{% static 'images/logo.jpg' %}" alt="Mar Gregorios School" style="height: 80px; margin-bottom: 10px;">
+        <h2>MAR GREGORIOS SCHOOL, PRAVACHAMBALAM</h2>
+        <h3>Official Election Tally Report</h3>
+        <p class="text-muted">Report Generated on: <span id="current-date-placeholder"></span></p>
+    </div>
+
+
+    <!-- Header Actions -->
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3 mb-5 no-print">
+        <div>
+            <h1 class="fw-extrabold text-slate-900 mb-1">Election Results</h1>
+            <p class="text-muted mb-0">Live vote count tallies and winners breakdown.</p>
+        </div>
+        
+        <div class="d-flex gap-2">
+            <button onclick="window.print()" class="btn btn-outline-dark d-flex align-items-center gap-2 py-2 px-3 fw-semibold">
+                <i class="fa-solid fa-file-pdf"></i> EXPORT TO PDF / PRINT
+            </button>
+            <a href="{% url 'control_panel' %}" class="btn btn-primary-custom d-flex align-items-center gap-2 py-2 px-3">
+                <i class="fa-solid fa-arrow-left"></i> BACK TO DASHBOARD
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Tally Overview -->
+    <div class="row g-4 mb-5">
+        <div class="col-12 col-md-4 text-center text-md-start">
+            <div class="dashboard-stat-card py-4 h-100 d-flex flex-column justify-content-center">
+                <span class="text-muted text-uppercase fw-bold text-xs tracking-wider mb-1">Total Votes Authenticated</span>
+                <div class="display-4 fw-extrabold text-indigo" style="color: var(--primary);">{{ total_votes }}</div>
+                <span class="text-xs text-muted">Across all standards and divisions</span>
+            </div>
+        </div>
+        
+        <div class="col-12 col-md-4">
+            <div class="dashboard-stat-card py-3 px-4 h-100 d-flex align-items-center gap-3">
+                <span class="d-flex align-items-center justify-content-center bg-warning-subtle text-warning-emphasis rounded-circle fs-3" style="width: 50px; height: 50px;">
+                    <i class="fa-solid fa-crown"></i>
+                </span>
+                <div>
+                    <span class="text-muted text-xs d-block text-uppercase fw-bold">Male Leader Elect</span>
+                    <strong class="fs-5 text-slate-800">
+                        {% if male_winner %}{{ male_winner.name }}{% else %}<span class="text-muted font-normal">TBD</span>{% endif %}
+                    </strong>
+                    {% if male_winner %}
+                        <span class="d-block text-xs text-muted">{{ male_winner.vote_count }} Votes cast</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="dashboard-stat-card py-3 px-4 h-100 d-flex align-items-center gap-3">
+                <span class="d-flex align-items-center justify-content-center bg-warning-subtle text-warning-emphasis rounded-circle fs-3" style="width: 50px; height: 50px;">
+                    <i class="fa-solid fa-crown"></i>
+                </span>
+                <div>
+                    <span class="text-muted text-xs d-block text-uppercase fw-bold">Female Leader Elect</span>
+                    <strong class="fs-5 text-slate-800">
+                        {% if female_winner %}{{ female_winner.name }}{% else %}<span class="text-muted font-normal">TBD</span>{% endif %}
+                    </strong>
+                    {% if female_winner %}
+                        <span class="d-block text-xs text-muted">{{ female_winner.vote_count }} Votes cast</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Candidate Tallies Grid -->
+    <div class="row g-5">
+        
+        <!-- MALE REPRESENTATIVE COLUMN -->
+        <div class="col-12 col-lg-6">
+            <div class="d-flex align-items-center gap-2 mb-4 pb-2 border-bottom">
+                <i class="fa-solid fa-user-tie text-primary fs-4"></i>
+                <h3 class="fw-bold mb-0">Male Representative Results</h3>
+            </div>
+            
+            <div class="d-flex flex-column gap-4">
+                {% for candidate in male_results %}
+                    <div class="card border-0 shadow-sm p-3 {% if forloop.first and candidate.vote_count > 0 %}winner-card{% endif %}">
+                        {% if forloop.first and candidate.vote_count > 0 %}
+                            <span class="winner-ribbon"><i class="fa-solid fa-crown me-1"></i> Winner</span>
+                        {% endif %}
+                        
+                        <div class="d-flex align-items-center gap-3">
+                            <!-- Index Placement -->
+                            <div class="fs-3 fw-extrabold text-muted px-2" style="width: 40px;">#{{ forloop.counter }}</div>
+                            
+                            <!-- Candidate Photo -->
+                            <div class="candidate-img-container mb-0" style="width: 65px; height: 65px; border-width: 2px;">
+                                {% if candidate.photo %}
+                                    <img src="{{ candidate.photo.url }}" alt="{{ candidate.name }}" class="candidate-img">
+                                {% else %}
+                                    <i class="fa-solid fa-user text-slate-300 fs-3"></i>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Progress & Stats -->
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-end mb-1">
+                                    <h4 class="h6 fw-bold mb-0 text-slate-900">{{ candidate.name }}</h4>
+                                    <span class="text-sm fw-semibold text-slate-800">
+                                        <strong>{{ candidate.vote_count }}</strong>
+                                        <span class="text-muted text-xs">/ {{ total_votes }} votes</span>
+                                    </span>
+                                </div>
+                                
+                                <div class="progress" style="height: 10px; border-radius: 999px;">
+                                    <div class="progress-bar bg-primary" role="progressbar" 
+                                         style="width: {% if total_votes > 0 %}{% widthratio candidate.vote_count total_votes 100 %}{% else %}0{% endif %}%" 
+                                         aria-valuenow="{% if total_votes > 0 %}{% widthratio candidate.vote_count total_votes 100 %}{% else %}0{% endif %}" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="100">
+                                    </div>
+                                </div>
+                                <div class="text-end text-muted text-xs mt-1">
+                                    {% if total_votes > 0 %}{% widthratio candidate.vote_count total_votes 100 %}{% else %}0{% endif %}% of total
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="text-center text-muted p-4 border rounded-3 bg-white">
+                        <i class="fa-solid fa-users-slash fs-2 mb-2"></i>
+                        <p class="mb-0">No registered male candidates to rank.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- FEMALE REPRESENTATIVE COLUMN -->
+        <div class="col-12 col-lg-6">
+            <div class="d-flex align-items-center gap-2 mb-4 pb-2 border-bottom">
+                <i class="fa-solid fa-user-dress text-primary fs-4"></i>
+                <h3 class="fw-bold mb-0">Female Representative Results</h3>
+            </div>
+            
+            <div class="d-flex flex-column gap-4">
+                {% for candidate in female_results %}
+                    <div class="card border-0 shadow-sm p-3 {% if forloop.first and candidate.vote_count > 0 %}winner-card{% endif %}">
+                        {% if forloop.first and candidate.vote_count > 0 %}
+                            <span class="winner-ribbon"><i class="fa-solid fa-crown me-1"></i> Winner</span>
+                        {% endif %}
+                        
+                        <div class="d-flex align-items-center gap-3">
+                            <!-- Index Placement -->
+                            <div class="fs-3 fw-extrabold text-muted px-2" style="width: 40px;">#{{ forloop.counter }}</div>
+                            
+                            <!-- Candidate Photo -->
+                            <div class="candidate-img-container mb-0" style="width: 65px; height: 65px; border-width: 2px;">
+                                {% if candidate.photo %}
+                                    <img src="{{ candidate.photo.url }}" alt="{{ candidate.name }}" class="candidate-img">
+                                {% else %}
+                                    <i class="fa-solid fa-user text-slate-300 fs-3"></i>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Progress & Stats -->
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-end mb-1">
+                                    <h4 class="h6 fw-bold mb-0 text-slate-900">{{ candidate.name }}</h4>
+                                    <span class="text-sm fw-semibold text-slate-800">
+                                        <strong>{{ candidate.vote_count }}</strong>
+                                        <span class="text-muted text-xs">/ {{ total_votes }} votes</span>
+                                    </span>
+                                </div>
+                                
+                                <div class="progress" style="height: 10px; border-radius: 999px;">
+                                    <div class="progress-bar bg-primary" role="progressbar" 
+                                         style="width: {% if total_votes > 0 %}{% widthratio candidate.vote_count total_votes 100 %}{% else %}0{% endif %}%" 
+                                         aria-valuenow="{% if total_votes > 0 %}{% widthratio candidate.vote_count total_votes 100 %}{% else %}0{% endif %}" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="100">
+                                    </div>
+                                </div>
+                                <div class="text-end text-muted text-xs mt-1">
+                                    {% if total_votes > 0 %}{% widthratio candidate.vote_count total_votes 100 %}{% else %}0{% endif %}% of total
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="text-center text-muted p-4 border rounded-3 bg-white">
+                        <i class="fa-solid fa-users-slash fs-2 mb-2"></i>
+                        <p class="mb-0">No registered female candidates to rank.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Votes Audit Breakdown by Class -->
+    <div class="row mt-5 pt-3">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm p-4">
+                <h3 class="h5 fw-bold mb-4 border-bottom pb-2 text-slate-800">
+                    <i class="fa-solid fa-chart-line text-primary me-2"></i>Turnout Audit: Votes Cast by Class Group
+                </h3>
+                
+                {% if class_breakdown %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Standard Group</th>
+                                    <th>Division</th>
+                                    <th>Votes Authenticated</th>
+                                    <th>% of Total Vote Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in class_breakdown %}
+                                    <tr>
+                                        <td><strong>Standard {{ row.standard }}</strong></td>
+                                        <td><span class="badge bg-secondary-subtle text-secondary-emphasis px-2.5 py-1">{{ row.division }}</span></td>
+                                        <td>{{ row.count }}</td>
+                                        <td>{% if total_votes > 0 %}{% widthratio row.count total_votes 100 %}%{% else %}0%{% endif %}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center text-muted p-4 bg-light rounded-3">
+                        <i class="fa-solid fa-folder-open fs-3 mb-2"></i>
+                        <p class="mb-0">No audit logs. Turnout data will update once the first vote is recorded.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set dynamic date in document print view
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        document.getElementById('current-date-placeholder').innerText = new Date().toLocaleDateString("en-US", options);
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}School Election 2026{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom Style -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <nav class="navbar navbar-expand-lg election-header py-3 no-print">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center fw-extrabold text-white gap-2" href="/">
+                <!-- School Crest Logo -->
+                <img src="{% static 'images/logo.jpg' %}" alt="Mar Gregorios School Crest" class="school-logo-svg" style="width: 48px; height: 48px; object-fit: contain; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3);">
+                <div class="d-flex flex-column lh-sm">
+                    <span class="fs-6 fw-extrabold text-white lh-1">MAR GREGORIOS SCHOOL</span>
+                    <span class="text-warning fw-bold" style="font-size: 0.7rem; letter-spacing: 0.05em;">PRAVACHAMBALAM &bull; E-ELECTION 2026</span>
+                </div>
+            </a>
+            
+            <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#electionNavbar" aria-controls="electionNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fa-solid fa-bars fs-3"></i>
+            </button>
+            
+            <div class="collapse navbar-collapse justify-content-end" id="electionNavbar">
+                <ul class="navbar-nav align-items-center gap-2 mt-3 mt-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50 hover-white px-3" href="{% url 'student_vote' %}">
+                            <i class="fa-solid fa-check-to-slot me-1"></i> Voting Screen
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50 hover-white px-3" href="{% url 'control_panel' %}">
+                            <i class="fa-solid fa-sliders me-1"></i> Invigilator Panel
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50 hover-white px-3" href="{% url 'candidate_list' %}">
+                            <i class="fa-solid fa-user-group me-1"></i> Candidates
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50 hover-white px-3" href="{% url 'election_results' %}">
+                            <i class="fa-solid fa-chart-simple me-1"></i> Live Results
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow-1 py-4 py-md-5">
+        <div class="container">
+            <!-- Global Message Alerts -->
+            {% if messages %}
+                <div class="row justify-content-center mb-4 no-print">
+                    <div class="col-12 col-md-10">
+                        {% for message in messages %}
+                            <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% else %}info{% endif %} alert-dismissible fade show shadow-sm" role="alert">
+                                <div class="d-flex align-items-center gap-2">
+                                    {% if message.tags == 'error' %}
+                                        <i class="fa-solid fa-circle-exclamation fs-5"></i>
+                                    {% elif message.tags == 'success' %}
+                                        <i class="fa-solid fa-circle-check fs-5"></i>
+                                    {% else %}
+                                        <i class="fa-solid fa-circle-info fs-5"></i>
+                                    {% endif %}
+                                    <div>{{ message }}</div>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-4 text-center border-top border-secondary-subtle no-print">
+        <div class="container">
+            <p class="mb-1">&copy; 2026 Mar Gregorios School, Pravachambalam. All rights reserved.</p>
+            <p class="mb-0 text-white-50 text-xs">Supervised Shared-Device Voting Terminal &bull; Strict voter privacy enforced.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

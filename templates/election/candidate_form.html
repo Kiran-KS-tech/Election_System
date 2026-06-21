@@ -1,0 +1,114 @@
+{% extends 'election/base.html' %}
+
+{% block title %}{% if object %}Edit Candidate{% else %}Add Candidate{% endif %} | School Election 2026{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
+        <div class="card border-0 shadow-sm p-4 p-md-5 bg-white" style="border-radius: 1.5rem;">
+            
+            <div class="d-flex align-items-center gap-3 mb-4 pb-2 border-bottom">
+                <span class="d-flex align-items-center justify-content-center bg-primary-light text-primary rounded-circle" style="width: 50px; height: 50px; background-color: var(--primary-light);">
+                    <i class="fa-solid {% if object %}fa-user-pen{% else %}fa-user-plus{% endif %} fs-4"></i>
+                </span>
+                <div>
+                    <h1 class="h3 fw-extrabold text-slate-800 mb-0">{% if object %}Edit Candidate{% else %}Register Candidate{% endif %}</h1>
+                    <p class="text-muted text-sm mb-0">Configure profile details and voter parameters.</p>
+                </div>
+            </div>
+
+            <!-- Standard Django ModelForm with File Upload support -->
+            <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+                
+                <div class="row g-4">
+                    <div class="col-12 col-md-8">
+                        <div class="mb-3">
+                            <label for="{{ form.name.id_for_label }}" class="form-label fw-semibold">Full Name</label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <div class="text-danger text-xs mt-1">{{ form.name.errors.as_text }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.gender.id_for_label }}" class="form-label fw-semibold">Representative Category / Gender</label>
+                            {{ form.gender }}
+                            {% if form.gender.errors %}
+                                <div class="text-danger text-xs mt-1">{{ form.gender.errors.as_text }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Profile Photo Preview & Input Column -->
+                    <div class="col-12 col-md-4 text-center d-flex flex-column align-items-center justify-content-center">
+                        <div class="candidate-img-container shadow-sm border border-2 border-light-subtle" style="width: 120px; height: 120px;">
+                            {% if object and object.photo %}
+                                <img src="{{ object.photo.url }}" alt="{{ object.name }}" class="candidate-img" id="photo-preview">
+                            {% else %}
+                                <i class="fa-solid fa-user text-slate-300 fs-1" id="placeholder-icon"></i>
+                                <img src="" alt="Preview" class="candidate-img d-none" id="photo-preview">
+                            {% endif %}
+                        </div>
+                        <span class="text-muted text-xs d-block mb-1">Profile Photo</span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.photo.id_for_label }}" class="form-label fw-semibold">Upload Photo</label>
+                    {{ form.photo }}
+                    <div class="form-text text-xs">For best results, upload a square image (JPG/PNG).</div>
+                    {% if form.photo.errors %}
+                        <div class="text-danger text-xs mt-1">{{ form.photo.errors.as_text }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label for="{{ form.manifesto.id_for_label }}" class="form-label fw-semibold">Manifesto (Campaign Goals)</label>
+                    {{ form.manifesto }}
+                    {% if form.manifesto.errors %}
+                        <div class="text-danger text-xs mt-1">{{ form.manifesto.errors.as_text }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Submit Controls -->
+                <div class="d-flex gap-3 justify-content-end pt-3 border-top">
+                    <a href="{% url 'candidate_list' %}" class="btn btn-light border px-4 py-2.5 fw-semibold">Cancel</a>
+                    <button type="submit" class="btn btn-primary-custom px-4 py-2.5">
+                        <i class="fa-solid fa-floppy-disk me-2"></i>Save Profile
+                    </button>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Live preview uploaded profile photos in browser
+    document.addEventListener('DOMContentLoaded', function() {
+        const photoInput = document.querySelector('input[type="file"]');
+        const previewImg = document.getElementById('photo-preview');
+        const placeholderIcon = document.getElementById('placeholder-icon');
+        
+        if (photoInput) {
+            photoInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImg.src = e.target.result;
+                        previewImg.classList.remove('d-none');
+                        if (placeholderIcon) {
+                            placeholderIcon.classList.add('d-none');
+                        }
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

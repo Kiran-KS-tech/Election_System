@@ -1,0 +1,51 @@
+{% extends 'election/base.html' %}
+
+{% block title %}Voting Suspended | School Election 2026{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center my-5">
+    <div class="col-12 col-md-8 col-lg-6 text-center">
+        <div class="card border-0 shadow-lg p-5 bg-white" style="border-radius: 1.5rem;">
+            <div class="mb-4">
+                <span class="d-inline-flex align-items-center justify-content-center bg-light text-warning rounded-circle" style="width: 100px; height: 100px;">
+                    <i class="fa-solid fa-hourglass-half fs-1 animate-pulse"></i>
+                </span>
+            </div>
+            
+            <h1 class="fw-extrabold text-slate-800 mb-2">Voting Terminal Standby</h1>
+            <p class="text-muted fs-5 mb-4">The voting terminal is currently waiting for the invigilator to activate a class session.</p>
+            
+            <div class="p-3 bg-light rounded-3 text-start mb-4 border border-warning-subtle">
+                <h5 class="fw-bold text-warning-emphasis mb-1">
+                    <i class="fa-solid fa-circle-info me-2"></i>Status Information
+                </h5>
+                <ul class="mb-0 text-muted ps-3">
+                    <li>Current voting session status: <strong>{% if settings.voting_enabled %}Active{% else %}Disabled{% endif %}</strong></li>
+                    <li>Active standard group: <strong>{% if settings.current_class %}Class {{ settings.current_class }}{% else %}Not Assigned{% endif %}</strong></li>
+                </ul>
+            </div>
+            
+            <p class="text-sm text-muted">
+                Students, please wait in line. Once the supervisor activates your class division, this screen will update automatically.
+            </p>
+            
+            <!-- JavaScript to poll or reload page automatically every 5 seconds to detect status changes -->
+            <script>
+                setTimeout(function() {
+                    window.location.reload();
+                }, 5000);
+            </script>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.08); }
+    }
+    .animate-pulse {
+        animation: pulse 2s infinite ease-in-out;
+    }
+</style>
+{% endblock %}

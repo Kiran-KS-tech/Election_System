@@ -1,0 +1,219 @@
+{% extends 'election/base.html' %}
+
+{% block title %}Vote Cast Successfully | School Election 2026{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center my-4">
+    <div class="col-12 col-md-8 col-lg-6 text-center">
+        <div class="card border-0 shadow-lg p-5 bg-white" style="border-radius: 1.5rem;">
+            
+            <!-- Success Animated Checkmark -->
+            <div class="mb-4">
+                <div class="success-checkmark">
+                    <div class="check-icon">
+                        <span class="icon-line line-tip"></span>
+                        <span class="icon-line line-long"></span>
+                        <div class="icon-circle"></div>
+                        <div class="icon-fix"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <h1 class="fw-extrabold text-success mb-2">Vote Submitted Successfully</h1>
+            <p class="text-muted fs-5">Thank you for voting! Your selections have been recorded securely.</p>
+            
+            <div class="my-4 py-3 bg-light rounded-3 d-inline-block px-4 border border-secondary-subtle">
+                <span class="fw-bold text-slate-800">Class Session:</span>
+                <span class="badge bg-primary fs-6 px-3 py-1.5 ms-2">Class {{ active_class }}</span>
+            </div>
+            
+            <!-- Ticking Progress Ring -->
+            <div class="my-4">
+                <p class="text-muted mb-1 text-uppercase fw-bold tracking-wide">Next Vote Available In</p>
+                <div class="countdown-svg-wrapper">
+                    <svg class="countdown-svg-circle" viewBox="0 0 150 150">
+                        <circle class="bg-circle" cx="75" cy="75" r="60"/>
+                        <circle class="progress-circle" id="timer-circle" cx="75" cy="75" r="60" stroke-dasharray="377" stroke-dashoffset="0"/>
+                    </svg>
+                    <div class="countdown-number" id="countdown-number">30</div>
+                </div>
+            </div>
+            
+            <p class="text-xs text-muted mb-4">
+                Please step aside for the next voter. The terminal will reset automatically.
+            </p>
+            
+            <div class="mt-2">
+                <a href="{% url 'student_vote' %}" class="btn btn-primary-custom px-4 py-2 fw-semibold shadow-sm">
+                    <i class="fa-solid fa-forward me-2"></i>SKIP TIMER (NEXT VOTE)
+                </a>
+            </div>
+
+            
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Premium Checkmark Animation */
+    .success-checkmark {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto;
+        position: relative;
+    }
+    .success-checkmark .check-icon {
+        width: 80px;
+        height: 80px;
+        position: relative;
+        border-radius: 50%;
+        box-sizing: content-box;
+        border: 4px solid #4caf50;
+    }
+    .success-checkmark .check-icon::before, .success-checkmark .check-icon::after {
+        content: '';
+        height: 100px;
+        position: absolute;
+        background: #ffffff;
+        transform: rotate(-45deg);
+    }
+    .success-checkmark .check-icon::before {
+        width: 30px;
+        top: 37px;
+        left: -9px;
+        transform-origin: 100% 50%;
+        border-radius: 100px 0 0 100px;
+    }
+    .success-checkmark .check-icon::after {
+        width: 60px;
+        top: 46px;
+        left: 30px;
+        transform-origin: 0 50%;
+        border-radius: 0 100px 100px 0;
+    }
+    .success-checkmark .check-icon .icon-line {
+        height: 5px;
+        background-color: #4caf50;
+        display: block;
+        border-radius: 2px;
+        position: absolute;
+        z-index: 10;
+    }
+    .success-checkmark .check-icon .icon-line.line-tip {
+        width: 25px;
+        left: 14px;
+        top: 46px;
+        transform: rotate(45deg);
+        animation: icon-line-tip 0.75s;
+    }
+    .success-checkmark .check-icon .icon-line.line-long {
+        width: 47px;
+        right: 8px;
+        top: 38px;
+        transform: rotate(-45deg);
+        animation: icon-line-long 0.75s;
+    }
+    .success-checkmark .check-icon .icon-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        border: 4px solid rgba(76, 175, 80, 0.5);
+        box-sizing: content-box;
+        position: absolute;
+        left: -4px;
+        top: -4px;
+        z-index: 1;
+    }
+    .success-checkmark .check-icon .icon-fix {
+        width: 5px;
+        height: 90px;
+        background-color: #ffffff;
+        position: absolute;
+        left: 28px;
+        top: 8px;
+        z-index: 1;
+        transform: rotate(-45deg);
+    }
+
+    @keyframes icon-line-tip {
+        0% { width: 0; left: 1px; top: 19px; }
+        54% { width: 0; left: 1px; top: 19px; }
+        70% { width: 50px; left: -8px; top: 37px; }
+        84% { width: 17px; left: 21px; top: 48px; }
+        100% { width: 25px; left: 14px; top: 46px; }
+    }
+    @keyframes icon-line-long {
+        0% { width: 0; right: 46px; top: 54px; }
+        65% { width: 0; right: 46px; top: 54px; }
+        84% { width: 55px; right: 0px; top: 35px; }
+        100% { width: 47px; right: 8px; top: 38px; }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Play a synthetic electronic beep sound using Web Audio API on page load
+    function playBeep() {
+        try {
+            // Support multiple browsers
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            const audioCtx = new AudioContext();
+            
+            // Create oscillator and gain node
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(950, audioCtx.currentTime); // 950Hz frequency
+            
+            // Fast attack and smooth decay for clean beep sound
+            gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.6, audioCtx.currentTime + 0.05); // Attack
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.45); // Decay
+            
+            oscillator.start(audioCtx.currentTime);
+            oscillator.stop(audioCtx.currentTime + 0.45); // Total duration 0.45s
+        } catch (error) {
+            console.log("Web Audio API is blocked or not supported on this browser:", error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Trigger beep sound automatically
+        playBeep();
+        
+        // Also play on first document click in case browser strictly blocks auto-audio
+        document.body.addEventListener('click', playBeep, { once: true });
+
+        const totalTime = 30; // 30 seconds countdown
+        let timeLeft = totalTime;
+        const countdownEl = document.getElementById('countdown-number');
+        const progressCircle = document.getElementById('timer-circle');
+        const circumference = 377; // 2 * pi * r (r=60)
+        
+        // Initialize timer countdown
+        const interval = setInterval(function() {
+            timeLeft--;
+            
+            if (timeLeft >= 0) {
+                // Update text number
+                countdownEl.innerText = timeLeft;
+                
+                // Update circular progress outline
+                const offset = circumference * (1 - (timeLeft / totalTime));
+                progressCircle.style.strokeDashoffset = offset;
+            }
+            
+            if (timeLeft <= 0) {
+                clearInterval(interval);
+                // Redirect back to voting page
+                window.location.href = "{% url 'student_vote' %}";
+            }
+        }, 1000);
+    });
+</script>
+{% endblock %}
