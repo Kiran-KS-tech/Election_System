@@ -292,3 +292,25 @@ footer {
         background: white !important;
     }
 }
+
+/* ══════════════════════════════════════
+   GLOBAL MOBILE RESPONSIVE STYLES
+══════════════════════════════════════ */
+@media (max-width: 767px) {
+  /* Navbar: shrink logo text */
+  .election-header .fs-6 { font-size: 0.82rem !important; }
+  .school-logo-svg { width: 36px !important; height: 36px !important; }
+
+  /* Dashboard stat cards stack */
+  .dashboard-stat-card { padding: 1rem; }
+
+  /* Control panel form selects: full width on mobile */
+  select.form-select { font-size: 0.9rem; }
+
+  /* Winner ribbon repositioned to avoid overflow */
+  .winner-ribbon { font-size: 0.65rem; padding: 0.2rem 0.5rem; }
+
+  /* Candidate cards on results/manage pages: readable on small screen */
+  .candidate-img-container { width: 80px; height: 80px; }
+  .candidate-name { font-size: 1rem; }
+}
