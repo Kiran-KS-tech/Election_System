@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required as django_staff_member_required
 from django.contrib import messages
 from django.db.models import Count
+from django.db.models.deletion import ProtectedError
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -200,8 +201,17 @@ class CandidateDeleteView(DeleteView):
     model = Candidate
     template_name = 'election/candidate_confirm_delete.html'
     success_url = reverse_lazy('candidate_list')
-    
-    def delete(self, request, *args, **kwargs):
+
+    def post(self, request, *args, **kwargs):
         candidate = self.get_object()
-        messages.success(request, f"Candidate {candidate.name} deleted successfully!")
-        return super().delete(request, *args, **kwargs)
+        try:
+            response = super().delete(request, *args, **kwargs)
+            messages.success(request, f"Candidate {candidate.name} deleted successfully!")
+            return response
+        except ProtectedError:
+            messages.error(
+                request,
+                f"Cannot delete {candidate.name} because they have votes recorded. "
+                f"Please reset the election first, then try again."
+            )
+            return redirect('candidate_list')

@@ -17,7 +17,7 @@ urlpatterns = [
     path('results/', views.election_results, name='election_results'),
     
     # Candidate management routes (CRUD)
-    path('candidates/', views.CandidateListView.as_name() if hasattr(views.CandidateListView, 'as_name') else views.CandidateListView.as_view(), name='candidate_list'),
+    path('candidates/', views.CandidateListView.as_view(), name='candidate_list'),
     path('candidates/add/', views.CandidateCreateView.as_view(), name='candidate_add'),
     path('candidates/edit/<int:pk>/', views.CandidateUpdateView.as_view(), name='candidate_edit'),
     path('candidates/delete/<int:pk>/', views.CandidateDeleteView.as_view(), name='candidate_delete'),
