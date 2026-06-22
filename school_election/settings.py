@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary_storage',
+    'cloudinary',
     'election',
 ]
 
@@ -147,6 +149,28 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# ── Cloudinary (free persistent media storage) ──────────────────────────────
+# Set these 3 env vars on Render dashboard → your service → Environment
+_CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME')
+_CLOUDINARY_API_KEY    = os.environ.get('CLOUDINARY_API_KEY')
+_CLOUDINARY_API_SECRET = os.environ.get('CLOUDINARY_API_SECRET')
+
+if _CLOUDINARY_CLOUD_NAME and _CLOUDINARY_API_KEY and _CLOUDINARY_API_SECRET:
+    import cloudinary
+    cloudinary.config(
+        cloud_name = _CLOUDINARY_CLOUD_NAME,
+        api_key    = _CLOUDINARY_API_KEY,
+        api_secret = _CLOUDINARY_API_SECRET,
+        secure     = True,
+    )
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': _CLOUDINARY_CLOUD_NAME,
+        'API_KEY':    _CLOUDINARY_API_KEY,
+        'API_SECRET': _CLOUDINARY_API_SECRET,
+    }
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+# ─────────────────────────────────────────────────────────────────────────────
 
 # Authentication redirects
 LOGIN_URL = '/login/'
