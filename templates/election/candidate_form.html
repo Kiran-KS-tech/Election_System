@@ -44,7 +44,9 @@
                     <div class="col-12 col-md-4 text-center d-flex flex-column align-items-center justify-content-center">
                         <div class="candidate-img-container shadow-sm border border-2 border-light-subtle" style="width: 120px; height: 120px;">
                             {% if object and object.photo %}
-                                <img src="{{ object.photo.url }}" alt="{{ object.name }}" class="candidate-img" id="photo-preview">
+                                <img src="{{ object.photo.url }}" alt="{{ object.name }}" class="candidate-img" id="photo-preview"
+                                     onerror="this.style.display='none'; document.getElementById('placeholder-icon').style.display='flex';">
+                                <i class="fa-solid fa-user text-slate-300 fs-1" id="placeholder-icon" style="display:none;"></i>
                             {% else %}
                                 <i class="fa-solid fa-user text-slate-300 fs-1" id="placeholder-icon"></i>
                                 <img src="" alt="Preview" class="candidate-img d-none" id="photo-preview">
