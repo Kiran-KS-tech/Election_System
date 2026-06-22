@@ -204,14 +204,13 @@ class CandidateDeleteView(DeleteView):
 
     def post(self, request, *args, **kwargs):
         candidate = self.get_object()
-        try:
-            response = super().delete(request, *args, **kwargs)
-            messages.success(request, f"Candidate {candidate.name} deleted successfully!")
-            return response
-        except ProtectedError:
-            messages.error(
-                request,
-                f"Cannot delete {candidate.name} because they have votes recorded. "
-                f"Please reset the election first, then try again."
-            )
-            return redirect('candidate_list')
+        name = candidate.name
+
+        # Delete all votes referencing this candidate (male or female slot)
+        # before attempting deletion, so PROTECT constraint is never triggered.
+        Vote.objects.filter(male_candidate=candidate).delete()
+        Vote.objects.filter(female_candidate=candidate).delete()
+
+        candidate.delete()
+        messages.success(request, f"Candidate {name} and their associated votes were deleted successfully.")
+        return redirect('candidate_list')
