@@ -37,7 +37,9 @@
                         <div class="card border-0 shadow-sm p-3 h-100 d-flex flex-row align-items-center gap-3">
                             <div class="candidate-img-container mb-0 flex-shrink-0" style="width: 75px; height: 75px; border-width: 2px;">
                                 {% if candidate.photo %}
-                                    <img src="{{ candidate.photo.url }}" alt="{{ candidate.name }}" class="candidate-img">
+                                    <img src="{{ candidate.photo.url }}" alt="{{ candidate.name }}" class="candidate-img"
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <i class="fa-solid fa-user text-slate-300 fs-2" style="display:none;"></i>
                                 {% else %}
                                     <i class="fa-solid fa-user text-slate-300 fs-2"></i>
                                 {% endif %}
@@ -82,7 +84,9 @@
                         <div class="card border-0 shadow-sm p-3 h-100 d-flex flex-row align-items-center gap-3">
                             <div class="candidate-img-container mb-0 flex-shrink-0" style="width: 75px; height: 75px; border-width: 2px;">
                                 {% if candidate.photo %}
-                                    <img src="{{ candidate.photo.url }}" alt="{{ candidate.name }}" class="candidate-img">
+                                    <img src="{{ candidate.photo.url }}" alt="{{ candidate.name }}" class="candidate-img"
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <i class="fa-solid fa-user text-slate-300 fs-2" style="display:none;"></i>
                                 {% else %}
                                     <i class="fa-solid fa-user text-slate-300 fs-2"></i>
                                 {% endif %}

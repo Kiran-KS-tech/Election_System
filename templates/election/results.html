@@ -151,7 +151,9 @@
                             <!-- Candidate Photo -->
                             <div class="candidate-img-container mb-0" style="width: 65px; height: 65px; border-width: 2px;">
                                 {% if candidate.photo %}
-                                    <img src="{{ candidate.photo.url }}" alt="{{ candidate.name }}" class="candidate-img">
+                                    <img src="{{ candidate.photo.url }}" alt="{{ candidate.name }}" class="candidate-img"
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <i class="fa-solid fa-user text-slate-300 fs-3" style="display:none;"></i>
                                 {% else %}
                                     <i class="fa-solid fa-user text-slate-300 fs-3"></i>
                                 {% endif %}
@@ -211,7 +213,9 @@
                             <!-- Candidate Photo -->
                             <div class="candidate-img-container mb-0" style="width: 65px; height: 65px; border-width: 2px;">
                                 {% if candidate.photo %}
-                                    <img src="{{ candidate.photo.url }}" alt="{{ candidate.name }}" class="candidate-img">
+                                    <img src="{{ candidate.photo.url }}" alt="{{ candidate.name }}" class="candidate-img"
+                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <i class="fa-solid fa-user text-slate-300 fs-3" style="display:none;"></i>
                                 {% else %}
                                     <i class="fa-solid fa-user text-slate-300 fs-3"></i>
                                 {% endif %}

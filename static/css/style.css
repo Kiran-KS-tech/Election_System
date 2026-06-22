@@ -112,6 +112,8 @@ body {
     align-items: center;
     justify-content: center;
     transition: border-color 0.3s ease;
+    position: relative;   /* needed for absolute img child */
+    flex-shrink: 0;
 }
 
 .candidate-radio:checked + .candidate-card .candidate-img-container {
@@ -119,9 +121,13 @@ body {
 }
 
 .candidate-img {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center top;
+    display: block;
 }
 
 .candidate-placeholder-icon {

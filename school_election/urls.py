@@ -29,6 +29,7 @@ urlpatterns = [
     path('', include('election.urls')),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Serve media files in both development and production
+# (Render uses ephemeral disk; photos persist per dyno session)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
